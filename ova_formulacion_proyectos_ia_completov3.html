@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVA - Formulación de Proyectos Asistidos por IA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+/* Estilos generales para el OVA */
+:root {
+  /* Nueva Paleta de Colores - Basada en Facultad de Inteligencia Artificial e Ingenierías (#d27b48) */
+  --color-acento: #d27b48; /* Naranja/Marrón principal de la facultad */
+  --color-acento-hover: #b86a3e; /* Tono más oscuro para hover */
+
+  /* Colores para botones de prompts y cuestionarios */
+  --color-boton-prompt: #4E81AA; /* Azul Acero (de Ciencias para la Salud en la paleta UCaldas) */
+  --color-boton-prompt-hover: #3E7099; /* Azul Acero más oscuro */
+  --color-boton-secundario: #E6B75F; /* Dorado (de Ciencias Exactas en la paleta UCaldas) */
+  --color-boton-secundario-hover: #D1A14A; /* Dorado más oscuro */
+  --color-herramienta-link: #066759; /* Verde (de Ciencias Exactas y Naturales) para enlaces de herramientas */
+  --color-herramienta-link-hover: #044a3f;
+
+
+  /* Colores para las tarjetas de sección */
+  --color-idea: #E08A5B;                  /* Naranja claro, derivado del principal */
+  --color-marco-logico: #4E81AA;          /* Azul Acero (de la paleta UCaldas) */
+  --color-plan-negocio: #66A382;          /* Verde Apagado (de la paleta UCaldas) */
+  --color-mapa-empatia: #8A5A8C;          /* Púrpura Apagado (derivado de la paleta UCaldas) */
+  --color-escenario-uso: #C86466;         /* Rojo Apagado (derivado de la paleta UCaldas) */
+  --color-revision-literatura: #E6B75F;   /* Dorado (de la paleta UCaldas) */
+  --color-recoleccion-datos: #5DBAB0;     /* Turquesa Claro */
+  --color-poster-cientifico: #5A6D7C;     /* Gris Azulado */
+  --color-derecho-autor: #A06C4A;         /* Marrón */
+  
+  /* Colores generales y de fondo */
+  --color-fondo: #f4f4f4; /* Un gris muy claro, casi blanco */
+  --color-texto: #333333;
+  --color-sombra: rgba(0, 0, 0, 0.1);
+  --color-borde-input: #ccc;
+  --color-correcto: #28a745;
+  --color-incorrecto: #dc3545;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Para la textura de fondo (reemplaza la URL):
+  background-image: url('/path/to/your/texture_image_f5da7b.png');
+  background-repeat: repeat;
+  background-attachment: fixed; 
+  */
+}
+
+header {
+  background-color: var(--color-acento);
+  color: white;
+  padding: 1rem 0;
+  text-align: center;
+  box-shadow: 0 2px 4px var(--color-sombra);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.95); 
+  box-shadow: 0 0 15px rgba(0,0,0,0.15); 
+  border-radius: 8px;
+  flex-grow: 1;
+  /* Para la textura de fondo directamente en el container (reemplaza la URL):
+  background-image: url('/path/to/your/texture_image_f5da7b.png');
+  background-repeat: repeat;
+  background-blend-mode: overlay; 
+  background-color: white;  
+  */
+}
+
+.introduccion, .section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px var(--color-sombra);
+}
+
+.introduccion h2, .section h2 {
+  color: var(--color-acento);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--color-acento);
+  padding-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.section h3 {
+  color: var(--color-texto);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+.section h4 {
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #555; /* Un color gris oscuro para subtítulos generales dentro de secciones */
+}
+.section .herramientas-recomendadas h4, .section .estructura-info h4 {
+    color: var(--color-herramienta-link); /* Color específico para títulos de herramientas/estructuras */
+}
+
+
+.section p, .section ul, .section ol {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.section ul, .section ol {
+  margin-left: 1.5rem;
+}
+.section ul.lista-simple { /* Para listas sin bullets estándar */
+    list-style-type: none;
+    padding-left: 0;
+}
+.section ul.lista-simple li {
+    padding-left: 1.2em;
+    text-indent: -1.2em;
+    margin-bottom: 0.3em;
+}
+.section ul.lista-simple li::before {
+    content: "•"; /* o "–", "‣", etc. */
+    color: var(--color-acento); /* Color del bullet */
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+    margin-right: 0.2em;
+}
+
+
+.section li {
+  margin-bottom: 0.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--color-sombra);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  color: white;
+  text-align: center;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.card-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+.card-body p {
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+.card-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f9f9f9;
+    text-align: right;
+    border-top: 1px solid #eee;
+}
+
+.btn, .btn-explorar, .btn-regresar, .btn-prompt, .btn-generar-prompt, .btn-quiz, .btn-quiz-iniciar, .btn-quiz-finalizar, .btn-quiz-reiniciar, .btn-herramienta {
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none; 
+}
+.btn-explorar {
+  background-color: var(--color-acento);
+  color: white;
+}
+.btn-explorar:hover {
+  background-color: var(--color-acento-hover);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-regresar {
+  background-color: var(--color-acento);
+  color: white;
+  margin-top: 1.5rem;
+}
+.btn-regresar:hover {
+  background-color: var(--color-acento-hover);
+}
+
+.btn-herramienta {
+    background-color: transparent;
+    color: var(--color-herramienta-link);
+    border: 1px solid var(--color-herramienta-link);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    text-transform: none;
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
+.btn-herramienta:hover {
+    background-color: var(--color-herramienta-link);
+    color: white;
+}
+
+/* Estilos para Prompts */
+.prompt-container {
+    background-color: #e9ecef;
+    border-left: 5px solid var(--color-boton-prompt); 
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+.prompt-container h4 { /* Título "Prompt para..." */
+    color: var(--color-boton-prompt); 
+    margin-top: 0;
+}
+.prompt-text {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    white-space: pre-wrap; 
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.btn-prompt { 
+    background-color: var(--color-boton-prompt);
+    color: white;
+}
+.btn-prompt:hover {
+    background-color: var(--color-boton-prompt-hover);
+}
+.generador-prompt-container {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+.generador-prompt-container h4 { 
+    color: var(--color-boton-secundario);
+}
+.generador-prompt-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+.generador-prompt-container input[type="text"],
+.generador-prompt-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--color-borde-input);
+    font-size: 0.95em;
+}
+.generador-prompt-container textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+.btn-generar-prompt { 
+    background-color: var(--color-boton-secundario);
+    color: white;
+}
+.btn-generar-prompt:hover {
+    background-color: var(--color-boton-secundario-hover);
+}
+.ejemplo-resultado, .ficha-bibliografica, .herramientas-recomendadas, .estructura-info {
+    border: 1px dashed var(--color-acento); 
+    padding: 15px;
+    margin-top: 15px;
+    background-color: #fffaf5; 
+    border-radius: 5px;
+}
+.ejemplo-resultado h5, .ficha-bibliografica h5 {
+    margin-top: 0;
+    color: var(--color-acento);
+}
+.herramientas-recomendadas ul, .estructura-info ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.herramientas-recomendadas li, .estructura-info li {
+    margin-bottom: 0.8rem;
+}
+
+
+/* Estilos para Cuestionarios Interactivos */
+.cuestionario-interactivo {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #f0f0f0; 
+    border-left: 5px solid var(--color-acento);
+    border-radius: 0 5px 5px 0;
+}
+.cuestionario-interactivo h3 {
+    color: var(--color-acento);
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+.quiz-content-wrapper { 
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+}
+.pregunta-container {
+    margin-bottom: 1.5rem;
+}
+.pregunta-texto {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    font-size: 1.1em;
+}
+.opciones-lista {
+    list-style-type: none;
+    padding-left: 0;
+}
+.opciones-lista li {
+    margin-bottom: 0.5rem;
+}
+.opciones-lista label {
+    display: block;
+    padding: 0.75rem; 
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.opciones-lista label:hover {
+    background-color: #eef8ff; 
+    border-color: var(--color-boton-prompt); 
+}
+.opciones-lista input[type="radio"] {
+    margin-right: 0.75rem; 
+    transform: scale(1.2); 
+}
+.opciones-lista input[type="radio"]:checked + span { 
+    font-weight: bold;
+    color: var(--color-acento);
+}
+.progreso-barra-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    height: 12px; 
+}
+.progreso-barra {
+    height: 100%;
+    width: 0%;
+    background-color: var(--color-acento);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+.navegacion-cuestionario {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem; 
+    gap: 10px; 
+}
+
+.resultados-cuestionario {
+    padding: 1.5rem; 
+    border: 1px solid var(--color-acento);
+    background-color: #fff5e7; 
+    border-radius: 5px;
+    margin-top: 1.5rem;
+}
+.resultados-cuestionario h4 {
+    color: var(--color-acento);
+    margin-top: 0;
+    font-size: 1.3em; 
+    margin-bottom: 1rem;
+}
+.retroalimentacion-item {
+    margin-bottom: 1rem; 
+    padding: 0.75rem; 
+    border-radius: 4px; 
+}
+.retroalimentacion-item p {
+    margin-bottom: 0.3rem; 
+}
+.retroalimentacion-item.correcta {
+    background-color: #e6ffed; 
+    color: #1d7430;
+    border-left: 5px solid var(--color-correcto); 
+}
+.retroalimentacion-item.incorrecta {
+    background-color: #ffeeee; 
+    color: #a51825;
+    border-left: 5px solid var(--color-incorrecto); 
+}
+
+/* Estilos para botones de cuestionario */
+.btn-quiz-iniciar { 
+    background-color: var(--color-acento);
+    color: white;
+    width: 100%; 
+    margin-bottom: 1rem; 
+    padding: 0.8rem 1.2rem; 
+    font-size: 1em;
+}
+.btn-quiz-iniciar:hover {
+    background-color: var(--color-acento-hover);
+}
+
+.btn-quiz { 
+    background-color: var(--color-acento);
+    color: white;
+}
+.btn-quiz:hover {
+    background-color: var(--color-acento-hover);
+}
+.btn-quiz-finalizar { 
+    background-color: var(--color-boton-prompt); 
+    color: white;
+}
+.btn-quiz-finalizar:hover {
+    background-color: var(--color-boton-prompt-hover);
+}
+.btn-quiz-reiniciar { 
+    background-color: var(--color-boton-secundario); 
+    color: white;
+    margin-top: 1rem; 
+}
+.btn-quiz-reiniciar:hover {
+    background-color: var(--color-boton-secundario-hover);
+}
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+footer {
+  text-align: center;
+  padding: 1.5rem 0;
+  background-color: #333; 
+  color: white;
+  margin-top: auto;
+}
+footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+nav {
+    background-color: #4a4a4a; 
+    padding: 0.5rem 0;
+}
+nav ul {
+    list-style-type: none;
+    text-align: center;
+    padding-left: 0;
+}
+nav ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+nav ul li a:hover, nav ul li a.active {
+    background-color: var(--color-acento); 
+}
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+}
+
+@media (max-width: 768px) {
+  header h1 { font-size: 1.5rem; }
+  .container { width: 95%; margin-top: 1rem; padding: 0.5rem; }
+  .introduccion, .section { padding: 1rem; }
+  .section h2 { font-size: 1.5rem; }
+  .section h3 { font-size: 1.2rem; }
+  .grid { grid-template-columns: 1fr; }
+  nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #4a4a4a; 
+        position: absolute;
+        top: 60px; 
+        left: 0;
+        padding: 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+    }
+    nav ul.active { display: flex; }
+    nav ul li { display: block; width: 100%; text-align: center; margin: 0; }
+    nav ul li a { padding: 1rem; border-bottom: 1px solid #5f5f5f; } 
+    nav ul li:last-child a { border-bottom: none; }
+    .menu-toggle { display: block; position: absolute; right: 1rem; top: 0.5rem; }
+    .navegacion-cuestionario { flex-direction: column; }
+    .navegacion-cuestionario .btn { width: 100%; margin-bottom: 0.5rem; }
+    .navegacion-cuestionario .btn:last-child { margin-bottom: 0; }
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>OVA - Formulación de Proyectos Asistidos por IA</h1>
+        <button class="menu-toggle" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+    </header>
+
+    <nav>
+        <ul id="nav-menu">
+            </ul>
+    </nav>
+    
+    <main>
+        <div class="container" id="main-content-cards">
+            <div class="introduccion">
+                <h2>Bienvenido a la Formulación de Proyectos Asistidos por IA</h2>
+                <p>Este Objeto Virtual de Aprendizaje (OVA) está diseñado para guiarte a través de las etapas fundamentales en la formulación de proyectos, con un enfoque especial en cómo la Inteligencia Artificial (IA) puede potenciar cada fase. Desde la concepción de la idea hasta la creación de un póster científico, explorarás herramientas, metodologías y conceptos clave.</p>
+                <p>Navega por las diferentes secciones para construir una comprensión sólida y práctica. Cada módulo te ofrecerá conocimientos teóricos, ejemplos, prompts para IA y cuestionarios interactivos para evaluar tu aprendizaje.</p>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-idea);">
+                        <h3>1. Idea de Proyecto</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Aprende a generar, refinar y validar ideas de proyectos innovadores con el apoyo de la Inteligencia Artificial.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-marco-logico);">
+                        <h3>2. Marco Lógico</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Domina la Metodología de Marco Lógico (MML) y descubre cómo la IA puede asistir en su elaboración.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-plan-negocio);">
+                        <h3>3. Plan de Negocio</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Estructura planes de negocio sólidos y viables, utilizando la IA para análisis y proyecciones.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-mapa-empatia);">
+                        <h3>4. Mapa de Empatía</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Comprende a fondo a tus usuarios o clientes mediante Mapas de Empatía, y explora el rol de la IA.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-escenario-uso);">
+                        <h3>5. Escenario de Uso</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Define cómo los usuarios interactuarán con tu proyecto a través de escenarios de uso detallados.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-revision-literatura);">
+                        <h3>6. Revisión de Literatura</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Realiza revisiones de literatura efectivas y actualizadas con herramientas de IA para identificar el estado del arte.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-recoleccion-datos);">
+                        <h3>7. Recolección de Datos</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Conoce métodos y herramientas, incluyendo IA, para la recolección de datos pertinentes a tu proyecto.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-poster-cientifico);">
+                        <h3>8. Póster Científico</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Comunica los resultados de tu proyecto de manera efectiva y visualmente atractiva mediante un póster científico.</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" style="background-color: var(--color-derecho-autor);">
+                        <h3>9. Derecho de Autor</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Comprende los aspectos legales del derecho de autor y la propiedad intelectual en proyectos TI, y el registro de software.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="idea" class="section" style="display:none;">
+            <h2>1. Idea de Proyecto</h2>
+            <p>La ideación es el punto de partida crucial en la formulación de cualquier proyecto. Una buena idea es la semilla de una innovación exitosa. En el contexto de proyectos asistidos por IA, esto implica no solo identificar un problema o una oportunidad, sino también vislumbrar cómo la inteligencia artificial puede ser una parte integral de la solución.</p>
+            
+            <h4>¿Por qué es importante?</h4>
+            <p>Una buena idea de proyecto debe surgir de la intersección entre tus intereses personales, tus conocimientos técnicos y una necesidad real del mercado. La IA puede ayudarte a explorar estas conexiones y generar ideas innovadoras.</p>
+            
+            <h4>Proceso de Ideación Asistido por IA</h4>
+            <ul class="lista-simple">
+                <li>Identificación de intereses y habilidades personales</li>
+                <li>Exploración de necesidades del mercado</li>
+                <li>Generación de ideas con asistencia de IA</li>
+                <li>Evaluación y selección de la idea más prometedora</li>
+            </ul>
+
+            <h3>Características de una Buena Idea de Proyecto:</h3>
+            <ul>
+                <li><strong>Claridad:</strong> Debe ser fácil de entender y explicar.</li>
+                <li><strong>Originalidad/Innovación:</strong> Ofrecer algo nuevo o una mejora significativa sobre lo existente.</li>
+                <li><strong>Viabilidad:</strong> Ser realizable con los recursos disponibles (tiempo, dinero, tecnología).</li>
+                <li><strong>Relevancia:</strong> Abordar una necesidad real o un problema importante.</li>
+                <li><strong>Potencial de Impacto:</strong> Tener la capacidad de generar un cambio positivo o un valor significativo.</li>
+            </ul>
+            <h3>IA en la Generación y Validación de Ideas:</h3>
+            <p>La IA puede ser una herramienta poderosa en esta etapa, ayudando a identificar tendencias, validar la originalidad y generar propuestas básicas.</p>
+             <ul>
+                <li><strong>Brainstorming Asistido por IA:</strong> Herramientas que sugieren conceptos, palabras clave o combinaciones a partir de una idea inicial.</li>
+                <li><strong>Análisis de Tendencias con IA:</strong> Plataformas que analizan grandes volúmenes de datos (redes sociales, noticias, papers científicos) para identificar tendencias emergentes o necesidades no cubiertas.</li>
+                <li><strong>Validación Preliminar:</strong> Algoritmos que pueden evaluar la originalidad de una idea comparándola con bases de datos existentes o predecir su posible aceptación en el mercado basándose en patrones de consumo.</li>
+                <li><strong>Plataformas de Generación de Ideas:</strong> Algunas IA pueden generar propuestas de proyectos básicos a partir de parámetros dados por el usuario.</li>
+            </ul>
+            <h3>Proceso para Refinar una Idea:</h3>
+            <ol>
+                <li><strong>Investigación Inicial:</strong> Explorar si existen soluciones similares y cuál es el estado del arte.</li>
+                <li><strong>Definición del Problema:</strong> Articular claramente el problema que la idea busca resolver.</li>
+                <li><strong>Identificación de Usuarios/Beneficiarios:</strong> ¿A quién va dirigido el proyecto?</li>
+                <li><strong>Feedback Temprano:</strong> Discutir la idea con colegas, mentores o potenciales usuarios.</li>
+                <li><strong>Prototipado Rápido (si aplica):</strong> Crear una versión muy básica para visualizar y probar el concepto.</li>
+            </ol>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-lightbulb"></i> Prompt para Generación de Ideas de Proyecto</h4>
+                <pre class="prompt-text" id="prompt-idea-texto">Actúa como experto en desarrollo de aplicaciones y generación de ideas de proyectos. Basado en mis intereses, conocimientos y experiencia, ayúdame a identificar una idea de proyecto innovadora para desarrollar una aplicación.
+
+Mis hobbies e intereses: [Describe tus hobbies e intereses]
+Mis conocimientos y formación: [Describe tu formación académica y conocimientos técnicos]
+Mi experiencia previa: [Describe tu experiencia relevante]
+
+Por favor, genera 3 ideas de proyectos de aplicaciones (web, móvil o escritorio) que:
+1. Se alineen con mis intereses y conocimientos
+2. Resuelvan una necesidad real del mercado
+3. Sean viables técnicamente considerando mi experiencia
+4. Tengan potencial de innovación
+
+Para cada idea, incluye:
+- Nombre tentativo de la aplicación
+- Problema que resuelve
+- Descripción breve de la solución
+- Tipo de aplicación (web, móvil o escritorio)
+- Tecnologías recomendadas
+- Nivel de complejidad estimado</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-idea-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+
+            <div class="generador-prompt-container">
+                <h4><i class="fas fa-tools"></i> Generador de Prompt Personalizado</h4>
+                <label for="idea-hobbies">Tus hobbies e intereses:</label>
+                <textarea id="idea-hobbies" rows="3" placeholder="Ej: Fotografía, cocina vegana, juegos de estrategia"></textarea>
+                
+                <label for="idea-conocimientos">Tus conocimientos y formación:</label>
+                <textarea id="idea-conocimientos" rows="3" placeholder="Ej: Ingeniería de Software, Marketing Digital, Diseño Gráfico"></textarea>
+                
+                <label for="idea-experiencia">Tu experiencia previa:</label>
+                <textarea id="idea-experiencia" rows="3" placeholder="Ej: Desarrollo de apps móviles freelance, gestión de proyectos pequeños"></textarea>
+                
+                <button class="btn btn-generar-prompt" onclick="generarPromptPersonalizadoIdea()"><i class="fas fa-cogs"></i> Generar y Copiar Prompt Personalizado</button>
+            </div>
+
+            <div class="ejemplo-resultado">
+                <h5><i class="fas fa-check-circle"></i> Ejemplo de Resultado Esperado del Prompt</h5>
+                <p><strong>FitBuddy - Aplicación de Entrenamiento Personal con IA</strong></p>
+                <p><strong>Problema:</strong> Dificultad para mantener rutinas de ejercicio personalizadas y efectivas sin un entrenador personal.</p>
+                <p><strong>Solución:</strong> Aplicación móvil que utiliza IA para crear y adaptar rutinas de ejercicio personalizadas según los objetivos, condición física y progreso del usuario.</p>
+                <p><strong>Tipo:</strong> Aplicación Móvil</p>
+                <p><strong>Tecnologías:</strong> React Native, TensorFlow Lite, Firebase</p>
+                <p><strong>Complejidad:</strong> Media</p>
+            </div>
+            
+            <div class="cuestionario-interactivo" id="cuestionario-idea">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Idea de Proyecto</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-idea"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-idea" style="display:none;">
+                    <div id="quiz-container-idea"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-idea"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-idea" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-idea">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-idea" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-idea" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-idea" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="marco-logico" class="section" style="display:none;">
+            <h2>2. Marco Lógico</h2>
+            <h4>MARCO LÓGICO: Estructuración del Proyecto</h4>
+            <p>En esta sección aprenderás a estructurar tu proyecto utilizando la Metodología de Marco Lógico (MML), una herramienta analítica para la planificación y gestión de proyectos orientada por objetivos.</p>
+            
+            <h4>Componentes del Marco Lógico</h4>
+            <ul class="lista-simple">
+                <li><strong>Análisis de Involucrados:</strong> Identificación de grupos, personas e instituciones relacionadas con el proyecto.</li>
+                <li><strong>Árbol de Problemas:</strong> Representación de las relaciones causa-efecto entre los problemas identificados.</li>
+                <li><strong>Árbol de Objetivos:</strong> Transformación de los problemas en objetivos y soluciones.</li>
+                <li><strong>Matriz de Marco Lógico:</strong> Resumen del proyecto que incluye fin, propósito, componentes y actividades.</li>
+            </ul>
+            
+            <h3>Componentes Detallados de la Matriz de Marco Lógico (MML):</h3>
+            <ul>
+                <li><strong>Resumen Narrativo de Objetivos:</strong> Describe la jerarquía de objetivos del proyecto (Fin, Propósito, Componentes/Resultados, Actividades).</li>
+                <li><strong>Indicadores:</strong> Medidas cuantitativas y cualitativas que permiten verificar el logro de los objetivos en cada nivel. Deben ser SMART (Específicos, Medibles, Alcanzables, Relevantes, con Plazo definido).</li>
+                <li><strong>Medios de Verificación:</strong> Fuentes de información que se utilizarán para comprobar el estado de los indicadores.</li>
+                <li><strong>Supuestos:</strong> Factores externos que están fuera del control directo del proyecto pero que son cruciales para el éxito del mismo.</li>
+            </ul>
+             <h3>Relación Árbol de Problemas y Árbol de Objetivos:</h3>
+            <p>El proceso MML a menudo comienza con un análisis de la situación problemática, transformando un árbol de problemas (causas y efectos) en un árbol de objetivos (medios y fines).</p>
+            <h3>IA en la Creación del Marco Lógico:</h3>
+            <p>La IA puede asistir en la MML mediante análisis de problemas, sugerencia de indicadores, análisis de supuestos y redacción asistida.</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-sitemap"></i> Prompt para Estructuración con Marco Lógico</h4>
+                <pre class="prompt-text" id="prompt-marco-logico-texto">Actúa como experto en Metodología de Marco Lógico para proyectos de desarrollo de software. Necesito estructurar un proyecto para una Aplicación [Web/Móvil/Escritorio] que resuelva la siguiente necesidad: "[Describe la necesidad o problema]" en el contexto de [Lugar y contexto].
+
+Por favor, genera los siguientes componentes del Marco Lógico:
+
+1. Cuadro de Análisis de Involucrados con 4 grupos de interés (incluye columnas: Grupo, Intereses, Recursos/Mandatos, Estrategias)
+
+2. Árbol de Problemas que incluya:
+   - Problema central (formulado como pregunta de investigación)
+   - 4 problemas causa
+   - 4 problemas efecto
+
+3. Árbol de Objetivos que incluya:
+   - Objetivo General con esta estructura: "Desarrollar una Aplicación [Web/Móvil/Escritorio] para [solución al problema] en [Lugar y contexto]"
+   - 4 Objetivos Específicos (medios) con esta estructura:
+     1. Analizar requerimientos técnicos y operativos para la Aplicación [Web/Móvil/Escritorio]
+     2. Diseñar un Prototipo funcional de la Aplicación [Web/Móvil/Escritorio] para [solución al problema] en [Lugar y contexto]
+     3. Implementar la Aplicación diseñada
+     4. Evaluar la Aplicación Implementada
+   - 4 Objetivos Fines (impactos esperados)
+
+4. Matriz de Marco Lógico completa con:
+   - Fin, Propósito, Componentes y Actividades
+   - Indicadores verificables
+   - Medios de verificación
+   - Supuestos</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-marco-logico-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+
+            <div class="generador-prompt-container">
+                <h4><i class="fas fa-tools"></i> Generador de Prompt Personalizado</h4>
+                <label for="marco-necesidad">Necesidad o problema a resolver:</label>
+                <textarea id="marco-necesidad" rows="3" placeholder="Ej: Falta de acceso a información nutricional personalizada"></textarea>
+                
+                <label for="marco-contexto">Lugar y contexto:</label>
+                <input type="text" id="marco-contexto" placeholder="Ej: Gimnasios en Bogotá, Colombia">
+                
+                <label for="marco-tipo-app">Tipo de aplicación:</label>
+                <select id="marco-tipo-app">
+                    <option value="Web">Web</option>
+                    <option value="Móvil">Móvil</option>
+                    <option value="Escritorio">Escritorio</option>
+                </select>
+                
+                <button class="btn btn-generar-prompt" onclick="generarPromptPersonalizadoMarcoLogico()"><i class="fas fa-cogs"></i> Generar y Copiar Prompt Personalizado</button>
+            </div>
+
+            <div class="ejemplo-resultado">
+                <h5><i class="fas fa-table"></i> Ejemplo de Matriz de Marco Lógico (Fragmento)</h5>
+                <p><strong>Matriz de Marco Lógico - Aplicación FitBuddy</strong></p>
+                <table style="width:100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="border:1px solid #ddd; padding:8px; text-align:left;">Resumen Narrativo</th>
+                            <th style="border:1px solid #ddd; padding:8px; text-align:left;">Indicadores</th>
+                            <th style="border:1px solid #ddd; padding:8px; text-align:left;">Medios de Verificación</th>
+                            <th style="border:1px solid #ddd; padding:8px; text-align:left;">Supuestos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="border:1px solid #ddd; padding:8px;"><strong>Fin:</strong> Mejorar la condición física y calidad de vida de los habitantes de La Dorada</td>
+                            <td style="border:1px solid #ddd; padding:8px;">Incremento del 15% en actividad física regular en usuarios de la app</td>
+                            <td style="border:1px solid #ddd; padding:8px;">Encuestas de seguimiento, estadísticas de la app</td>
+                            <td style="border:1px solid #ddd; padding:8px;">Los usuarios mantienen interés en mejorar su condición física</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ddd; padding:8px;"><strong>Propósito:</strong> Desarrollar una aplicación móvil para entrenamiento personal con IA en La Dorada</td>
+                            <td style="border:1px solid #ddd; padding:8px;">App funcional con 500+ descargas en 3 meses</td>
+                            <td style="border:1px solid #ddd; padding:8px;">Estadísticas de tienda de aplicaciones</td>
+                            <td style="border:1px solid #ddd; padding:8px;">Existe demanda para aplicaciones de fitness en la región</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="cuestionario-interactivo" id="cuestionario-marco-logico">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Marco Lógico</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-marco-logico"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-marco-logico" style="display:none;">
+                    <div id="quiz-container-marco-logico"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-marco-logico"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-marco-logico" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-marco-logico">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-marco-logico" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-marco-logico" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-marco-logico" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="plan-negocio" class="section" style="display:none;">
+            <h2>3. Plan de Negocio</h2>
+            <p>En esta sección aprenderás a desarrollar un plan de negocio y un pitch efectivo para tu proyecto, utilizando herramientas de IA para optimizar tu propuesta de valor y estrategia de mercado.</p>
+
+            <div class="herramientas-recomendadas">
+                <h4><i class="fas fa-rocket"></i> Herramienta Recomendada: VentureKit.ai</h4>
+                <p>VentureKit.ai es una plataforma que utiliza IA para ayudarte a crear planes de negocio profesionales y pitches convincentes en minutos.</p>
+                <h5>Características de VentureKit.ai:</h5>
+                <ul class="lista-simple">
+                    <li>Generación de planes de negocio completos</li>
+                    <li>Creación de pitches persuasivos</li>
+                    <li>Análisis de mercado asistido por IA</li>
+                    <li>Proyecciones financieras</li>
+                    <li>Plantillas personalizables</li>
+                </ul>
+                <a href="https://www.venturekit.ai/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Visitar VentureKit.ai</a>
+            </div>
+            
+            <h3>Secciones Clave de un Plan de Negocio:</h3>
+            <ul>
+                <li>Resumen Ejecutivo</li>
+                <li>Descripción de la Empresa/Proyecto</li>
+                <li>Análisis de Mercado</li>
+                <li>Organización y Gestión</li>
+                <li>Productos o Servicios</li>
+                <li>Estrategia de Marketing y Ventas</li>
+                <li>Plan Operativo</li>
+                <li>Plan Financiero</li>
+            </ul>
+
+            <div class="estructura-info">
+                <h4><i class="fas fa-presentation"></i> Estructura del Pitch</h4>
+                <ol>
+                    <li><strong>Problema:</strong> Identifica claramente el problema que resuelve tu aplicación. Usa datos y estadísticas para demostrar su relevancia.</li>
+                    <li><strong>Solución:</strong> Presenta tu aplicación como la solución ideal, destacando sus características innovadoras y beneficios únicos.</li>
+                    <li><strong>Mercado:</strong> Define tu mercado objetivo y su tamaño. Demuestra que existe una demanda real para tu solución.</li>
+                    <li><strong>Modelo de Negocio:</strong> Explica cómo generará ingresos tu aplicación y cuál es tu estrategia de monetización.</li>
+                    <li><strong>Competencia:</strong> Analiza a tus competidores y explica por qué tu solución es superior o diferente.</li>
+                    <li><strong>Equipo:</strong> Presenta a tu equipo y destaca sus habilidades, experiencia y por qué son los indicados para ejecutar este proyecto.</li>
+                </ol>
+            </div>
+
+            <h3>IA en la Elaboración del Plan de Negocio:</h3>
+            <p>La IA puede ser un aliado estratégico para desarrollar un plan de negocio más robusto, asistiendo en análisis de mercado, proyecciones financieras y generación de contenido.</p>
+            <h3>Modelo Canvas vs. Plan de Negocio Tradicional:</h3>
+            <p>El Business Model Canvas es una herramienta visual y ágil, ideal para etapas iniciales, mientras que el plan de negocio tradicional es más detallado y extenso.</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-file-invoice-dollar"></i> Prompt para Plan de Negocio y Pitch</h4>
+                <pre class="prompt-text" id="prompt-plan-negocio-texto">Actúa como consultor experto en planes de negocio y pitch para startups tecnológicas. Necesito desarrollar un plan de negocio y un pitch para mi aplicación [Nombre de la Aplicación], que es una [tipo: web/móvil/escritorio] diseñada para [descripción breve de la solución] que resuelve el problema de [descripción del problema] en [lugar/mercado].
+
+Por favor, genera:
+
+1. PLAN DE NEGOCIO RESUMIDO que incluya:
+   - Resumen Ejecutivo (visión general del negocio en 200 palabras)
+   - Descripción detallada del producto/servicio
+   - Análisis de Mercado (tamaño, segmentos, tendencias)
+   - Análisis de Competencia (competidores directos e indirectos)
+   - Estrategia de Marketing y Ventas
+   - Modelo de Negocio y Monetización
+   - Proyecciones Financieras básicas (inversión inicial, costos operativos, proyección de ingresos)
+   - Hitos clave para los próximos 12 meses
+
+2. PITCH DECK con estructura de 10 diapositivas:
+   - Problema
+   - Solución
+   - Propuesta de Valor
+   - Mercado Objetivo y Tamaño
+   - Modelo de Negocio
+   - Tecnología/Producto
+   - Competencia y Ventajas Competitivas
+   - Estrategia de Marketing
+   - Equipo
+   - Proyecciones Financieras y Necesidades de Inversión
+
+Incluye datos específicos, métricas relevantes y ejemplos concretos para hacer el plan y el pitch más convincentes. Enfócate en destacar la innovación, escalabilidad y potencial de crecimiento del proyecto.</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-plan-negocio-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+             <div class="cuestionario-interactivo" id="cuestionario-plan-negocio">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Plan de Negocio</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-plan-negocio"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-plan-negocio" style="display:none;">
+                    <div id="quiz-container-plan-negocio"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-plan-negocio"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-plan-negocio" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-plan-negocio">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-plan-negocio" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-plan-negocio" class="resultados-cuestionario" style="display:none;"></div>
+                 <button class="btn btn-quiz-reiniciar" id="restart-btn-plan-negocio" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="mapa-empatia" class="section" style="display:none;">
+            <h2>4. Mapa de Empatía</h2>
+            <p>El Mapa de Empatía es una herramienta colaborativa visual que los equipos utilizan para obtener una comprensión más profunda de sus clientes o usuarios. Ayuda a ir más allá de las características demográficas y a entender mejor el entorno del usuario, su comportamiento, sus preocupaciones y sus aspiraciones.</p>
+            
+            <h4>Cuadrantes del Mapa de Empatía:</h4>
+            <ul class="lista-simple">
+                <li><strong>¿Qué PIENSA y SIENTE?</strong> Preocupaciones, aspiraciones, inquietudes</li>
+                <li><strong>¿Qué OYE?</strong> Lo que escucha de amigos, familia, colegas</li>
+                <li><strong>¿Qué VE?</strong> Su entorno, amigos, ofertas del mercado</li>
+                <li><strong>¿Qué DICE y HACE?</strong> Comportamiento, apariencia, actitud</li>
+                <li><strong>DOLOR:</strong> Miedos, frustraciones, obstáculos</li>
+                <li><strong>GANANCIA:</strong> Deseos, necesidades, medidas de éxito</li>
+            </ul>
+
+            <h4>Beneficios del Mapa de Empatía</h4>
+            <ul class="lista-simple">
+                <li>Ayuda a entender mejor las necesidades reales de los usuarios</li>
+                <li>Permite identificar insights que no son evidentes a primera vista</li>
+                <li>Facilita la toma de decisiones centradas en el usuario</li>
+                <li>Mejora la comunicación dentro del equipo de desarrollo</li>
+                <li>Valida o refuta hipótesis sobre los usuarios</li>
+            </ul>
+            
+            <h3>IA en la Creación o Análisis de Mapas de Empatía:</h3>
+            <p>La IA puede contribuir mediante análisis de sentimientos, identificación de patrones y generación de "User Personas".</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-user-friends"></i> Prompt para Mapa de Empatía</h4>
+                <pre class="prompt-text" id="prompt-mapa-empatia-texto">Actúa como experto en diseño centrado en el usuario y UX Research. Necesito crear un Mapa de Empatía detallado para los usuarios potenciales de mi aplicación [Nombre de la Aplicación], que es una [tipo: web/móvil/escritorio] diseñada para [descripción breve de la solución].
+
+Mi usuario objetivo tiene el siguiente perfil:
+- Demografía: [edad, género, ubicación, nivel educativo, etc.]
+- Contexto: [situación laboral, familiar, social]
+- Necesidades principales: [describir las necesidades que la aplicación pretende resolver]
+
+Por favor, genera un Mapa de Empatía completo con las siguientes secciones:
+
+1. ¿Qué PIENSA y SIENTE?
+   - ¿Cuáles son sus preocupaciones principales?
+   - ¿Qué es lo que realmente le importa (que quizás no diga públicamente)?
+   - ¿Cuáles son sus aspiraciones y sueños?
+
+2. ¿Qué VE?
+   - ¿Cómo es su entorno?
+   - ¿Qué ofertas está expuesto/a en el mercado?
+   - ¿Qué ve en sus amigos y personas cercanas?
+   - ¿Qué problemas observa?
+
+3. ¿Qué OYE?
+   - ¿Qué dicen sus amigos y familia?
+   - ¿Qué escucha de sus colegas?
+   - ¿Qué oye de personas influyentes?
+   - ¿Qué canales de comunicación frecuenta?
+
+4. ¿Qué DICE y HACE?
+   - ¿Cuál es su comportamiento público?
+   - ¿Qué dice que es importante para él/ella?
+   - ¿Cómo se comporta?
+   - ¿Existe alguna discrepancia entre lo que dice y lo que hace?
+
+5. DOLOR (Frustraciones)
+   - ¿Cuáles son sus mayores frustraciones?
+   - ¿Qué obstáculos se interponen entre él/ella y lo que quiere lograr?
+   - ¿Qué riesgos teme enfrentar?
+
+6. GANANCIA (Deseos/Necesidades)
+   - ¿Qué es lo que realmente quiere o necesita conseguir?
+   - ¿Cómo mide el éxito?
+   - ¿Qué estrategias podría utilizar para alcanzar sus metas?
+
+Además, proporciona 5 preguntas clave que debería incluir en una entrevista para validar este Mapa de Empatía con usuarios reales, y 3 recomendaciones sobre cómo mi aplicación podría adaptarse mejor a las necesidades identificadas.</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-mapa-empatia-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+            <div class="ejemplo-resultado">
+                <h5><i class="fas fa-user-check"></i> Validación del Mapa de Empatía</h5>
+                <p>Una vez creado el Mapa de Empatía con ayuda de la IA, es fundamental validarlo con usuarios reales mediante:</p>
+                <ul class="lista-simple">
+                    <li>Entrevistas personales</li>
+                    <li>Encuestas dirigidas</li>
+                    <li>Observación de comportamiento</li>
+                    <li>Grupos focales</li>
+                </ul>
+            </div>
+
+            <div class="cuestionario-interactivo" id="cuestionario-mapa-empatia">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Mapa de Empatía</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-mapa-empatia"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-mapa-empatia" style="display:none;">
+                    <div id="quiz-container-mapa-empatia"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-mapa-empatia"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-mapa-empatia" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-mapa-empatia">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-mapa-empatia" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-mapa-empatia" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-mapa-empatia" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="escenario-uso" class="section" style="display:none;">
+            <h2>5. Escenario de Uso</h2>
+            <p>Un escenario de uso es una narrativa que describe cómo un usuario (o un tipo de usuario) interactúa con un sistema, producto o servicio para lograr un objetivo específico. Son descripciones concretas y detalladas de una secuencia de acciones y eventos desde la perspectiva del usuario.</p>
+            
+            <div class="estructura-info">
+                <h4><i class="fas fa-stream"></i> Estructura de un Escenario de Uso en 6 Escenas</h4>
+                <ol>
+                    <li><strong>Escena 1: El Problema</strong> - Muestra al usuario experimentando el problema o necesidad que tu aplicación resolverá.</li>
+                    <li><strong>Escena 2: Frustración</strong> - Ilustra la frustración o dificultad que causa el problema en la vida del usuario.</li>
+                    <li><strong>Escena 3: Descubrimiento</strong> - El usuario descubre tu aplicación como posible solución a su problema.</li>
+                    <li><strong>Escena 4: Uso Inicial</strong> - Muestra al usuario utilizando tu aplicación por primera vez, destacando la facilidad de uso.</li>
+                    <li><strong>Escena 5: Beneficio</strong> - Ilustra cómo la aplicación resuelve efectivamente el problema inicial.</li>
+                    <li><strong>Escena 6: Satisfacción</strong> - Muestra al usuario satisfecho, compartiendo su experiencia positiva con otros.</li>
+                </ol>
+            </div>
+
+            <div class="herramientas-recomendadas">
+                <h4><i class="fas fa-tools"></i> Herramientas para Crear Escenarios de Uso</h4>
+                <ul class="lista-simple">
+                    <li><strong>StoryboardThat:</strong> Plataforma online para crear storyboards.</li>
+                    <li><strong>Canva:</strong> Herramienta de diseño con plantillas para historietas.</li>
+                    <li><strong>DALL-E/Midjourney:</strong> Generadores de imágenes con IA.</li>
+                    <li><strong>Pixton:</strong> Creador de cómics online.</li>
+                </ul>
+            </div>
+
+            <h3>Propósito de los Escenarios de Uso:</h3>
+            <ul>
+                <li>Comprender el Contexto</li>
+                <li>Guiar el Diseño</li>
+                <li>Facilitar la Comunicación</li>
+                <li>Base para Pruebas</li>
+                <li>Identificar Requisitos</li>
+            </ul>
+            <h3>Elementos Típicos de un Escenario de Uso:</h3>
+            <ul>
+                <li>Actor</li>
+                <li>Objetivo</li>
+                <li>Contexto/Situación</li>
+                <li>Pasos/Secuencia de Acciones</li>
+            </ul>
+            <h3>Escenarios de Uso vs. Casos de Uso:</h3>
+            <p>Un caso de uso es general; un escenario de uso es una instancia concreta de un caso de uso.</p>
+            <h3>IA en la Generación o Simulación de Escenarios de Uso:</h3>
+            <p>La IA puede aportar valor en la generación asistida, simulación de interacciones y análisis de viabilidad de escenarios.</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-film"></i> Prompt para Escenario de Uso (Storyboard)</h4>
+                <pre class="prompt-text" id="prompt-escenario-uso-texto">Actúa como guionista y diseñador de experiencia de usuario. Necesito crear un escenario de uso en forma de storyboard con 6 escenas para mi aplicación [Nombre de la Aplicación], que es una [tipo: web/móvil/escritorio] diseñada para [descripción breve de la solución] que resuelve el problema de [descripción del problema].
+
+Mi usuario objetivo es: [breve descripción del usuario típico]
+
+Por favor, crea un guion detallado para un storyboard de 6 escenas que muestre la progresión desde el problema hasta la solución. Para cada escena, proporciona:
+
+1. ESCENA 1 - EL PROBLEMA:
+   - Descripción detallada de la situación
+   - Diálogo o pensamiento del personaje
+   - Elementos visuales clave a incluir
+   - Emoción principal que debe transmitir
+
+2. ESCENA 2 - FRUSTRACIÓN:
+   - Descripción detallada de la situación
+   - Diálogo o pensamiento del personaje
+   - Elementos visuales clave a incluir
+   - Emoción principal que debe transmitir
+
+3. ESCENA 3 - DESCUBRIMIENTO:
+   - Descripción detallada de la situación
+   - Diálogo o pensamiento del personaje
+   - Elementos visuales clave a incluir
+   - Emoción principal que debe transmitir
+
+4. ESCENA 4 - USO INICIAL:
+   - Descripción detallada de la situación
+   - Diálogo o pensamiento del personaje
+   - Elementos visuales clave a incluir
+   - Emoción principal que debe transmitir
+
+5. ESCENA 5 - BENEFICIO:
+   - Descripción detallada de la situación
+   - Diálogo o pensamiento del personaje
+   - Elementos visuales clave a incluir
+   - Emoción principal que debe transmitir
+
+6. ESCENA 6 - SATISFACCIÓN:
+   - Descripción detallada de la situación
+   - Diálogo o pensamiento del personaje
+   - Elementos visuales clave a incluir
+   - Emoción principal que debe transmitir
+
+Además, proporciona 3 sugerencias específicas sobre cómo este storyboard podría utilizarse en la estrategia de marketing de la aplicación.</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-escenario-uso-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+            <div class="cuestionario-interactivo" id="cuestionario-escenario-uso">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Escenario de Uso</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-escenario-uso"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-escenario-uso" style="display:none;">
+                    <div id="quiz-container-escenario-uso"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-escenario-uso"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-escenario-uso" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-escenario-uso">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-escenario-uso" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-escenario-uso" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-escenario-uso" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="revision-literatura" class="section" style="display:none;">
+            <h2>6. Revisión de Literatura</h2>
+            <p>En esta sección aprenderás a realizar una investigación profunda de literatura académica y técnica utilizando agentes de IA para fundamentar tu proyecto.</p>
+            
+            <div class="herramientas-recomendadas">
+                <h4><i class="fas fa-search-plus"></i> Herramientas de IA Recomendadas</h4>
+                <ul>
+                    <li><strong>ChatGPT (Agente de Búsqueda):</strong> Utiliza el modo de navegación de ChatGPT para buscar información actualizada y relevante sobre tu tema de investigación. <a href="https://chat.openai.com" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a ChatGPT</a></li>
+                    <li><strong>Gemini:</strong> Aprovecha las capacidades multimodales de Gemini para analizar tanto texto como imágenes relacionadas con tu investigación. <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a Gemini</a></li>
+                    <li><strong>AnswerThis:</strong> Herramienta especializada en responder preguntas de investigación con fuentes académicas verificables. <a href="https://www.answerthis.io/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a AnswerThis</a></li>
+                    <li><strong>StormGENIE:</strong> Asistente de investigación que ayuda a generar ideas, encontrar fuentes y estructurar revisiones de literatura. <a href="https://stormgenie.ai/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a StormGENIE</a></li>
+                    <li><strong>NotebookLM:</strong> Herramienta de Google para organizar, analizar y sintetizar información de múltiples fuentes. <a href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a NotebookLM</a></li>
+                </ul>
+            </div>
+
+            <h3>Importancia de la Revisión de Literatura:</h3>
+            <ul>
+                <li>Establecer el Estado del Arte</li>
+                <li>Identificar Vacíos en la Investigación</li>
+                <li>Evitar la Duplicación de Esfuerzos</li>
+            </ul>
+            <h3>Tipos de Fuentes Comunes:</h3>
+            <ul>
+                <li>Artículos Científicos (Journals)</li>
+                <li>Libros y Capítulos de Libros</li>
+                <li>Actas de Congresos</li>
+            </ul>
+            <h3>Pasos Clave para una Revisión Efectiva:</h3>
+            <ol>
+                <li>Definir el Alcance</li>
+                <li>Buscar la Literatura</li>
+                <li>Evaluar y Seleccionar las Fuentes</li>
+                <li>Identificar Temas y Tendencias</li>
+                <li>Estructurar y Escribir</li>
+            </ol>
+            <h3>IA en la Facilitación de la Revisión de Literatura:</h3>
+            <p>La IA está transformando la manera de realizar revisiones de literatura mediante búsqueda inteligente, filtrado automatizado y extracción de información.</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-book-open"></i> Prompt para Revisión de Literatura</h4>
+                <pre class="prompt-text" id="prompt-revision-literatura-texto">Actúa como investigador académico especializado en tecnología y desarrollo de software. Necesito realizar una revisión de literatura exhaustiva sobre el siguiente tema relacionado con mi proyecto:
+
+Pregunta de investigación: [Insertar la pregunta de investigación o problema central]
+
+Mi proyecto consiste en desarrollar una aplicación [tipo: web/móvil/escritorio] que [descripción breve de la solución].
+
+Por favor, ayúdame a realizar una revisión de literatura estructurada que incluya:
+
+1. ESTADO DEL ARTE:
+   - Principales teorías y conceptos relacionados con el tema
+   - Evolución histórica de las soluciones tecnológicas en este campo
+   - Tendencias actuales y direcciones futuras
+   - Tecnologías emergentes relevantes
+
+2. ANÁLISIS DE SOLUCIONES EXISTENTES:
+   - Identificación de 5-7 aplicaciones o sistemas similares
+   - Análisis comparativo de sus características, fortalezas y debilidades
+   - Modelos de negocio utilizados
+   - Tecnologías implementadas
+
+3. BRECHAS DE INVESTIGACIÓN:
+   - Identificación de áreas poco exploradas
+   - Limitaciones de las soluciones actuales
+   - Oportunidades de innovación
+
+4. MARCO TEÓRICO:
+   - Teorías y modelos que fundamentan mi propuesta
+   - Principios de diseño y desarrollo relevantes
+   - Metodologías aplicables
+
+5. RECOMENDACIONES:
+   - Sugerencias para el desarrollo de mi aplicación basadas en la literatura
+   - Aspectos clave a considerar según investigaciones previas
+   - Posibles obstáculos identificados en estudios anteriores
+
+Por favor, incluye referencias académicas específicas (artículos, libros, conferencias) para cada sección, preferiblemente de los últimos 5 años. Para cada referencia, proporciona el título completo, autores, año y, si es posible, DOI o URL.</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-revision-literatura-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+             <div class="ficha-bibliografica">
+                <h5><i class="fas fa-bookmark"></i> Ejemplo de Ficha Bibliográfica</h5>
+                <p><strong>Título:</strong> "Artificial Intelligence in Mobile Health Applications: A Comprehensive Review of the Literature"</p>
+                <p><strong>Autores:</strong> García-Martínez, R., López-Sánchez, M., & Rodríguez-Pérez, J.</p>
+                <p><strong>Año:</strong> 2023</p>
+                <p><strong>Publicación:</strong> Journal of Mobile Technologies in Healthcare, 15(3), 245-267</p>
+                <p><strong>DOI:</strong> 10.1080/jmth.2023.12345</p>
+                <p><strong>Resumen:</strong> Este estudio analiza la implementación de algoritmos de IA en aplicaciones móviles de salud, identificando patrones de éxito y desafíos comunes. Los autores revisan 78 aplicaciones y concluyen que los sistemas de recomendación personalizados y el procesamiento de lenguaje natural son las tecnologías más efectivas para mejorar la adherencia de los usuarios.</p>
+                <p><strong>Valoración:</strong> ★★★★☆ (4/5) - Estudio reciente con datos relevantes para aplicaciones de fitness y salud.</p>
+            </div>
+
+            <div class="cuestionario-interactivo" id="cuestionario-revision-literatura">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Revisión de Literatura</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-revision-literatura"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-revision-literatura" style="display:none;">
+                    <div id="quiz-container-revision-literatura"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-revision-literatura"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-revision-literatura" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-revision-literatura">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-revision-literatura" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-revision-literatura" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-revision-literatura" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="recoleccion-datos" class="section" style="display:none;">
+            <h2>7. Recolección de Datos</h2>
+            <p>La recolección de datos es el proceso de recopilar y medir información sobre variables de interés, de una manera sistemática que permita responder a preguntas de investigación, probar hipótesis y evaluar resultados. Es una etapa crítica en cualquier proyecto que busque generar conocimiento o tomar decisiones basadas en evidencia.</p>
+            
+            <div class="estructura-info">
+                <h4><i class="fas fa-tasks"></i> Diseño de Instrumentos de Recolección</h4>
+                <p>La IA puede ayudarte a crear encuestas y entrevistas efectivas que capturen la información necesaria para validar tu proyecto.</p>
+                <h5>Componentes de una Encuesta/Entrevista</h5>
+                <ul class="lista-simple">
+                    <li><strong>Nombre del Instrumento:</strong> Título claro y descriptivo.</li>
+                    <li><strong>Introducción:</strong> Explicación del propósito y mención de la Ley de Habeas Data de Colombia.</li>
+                    <li><strong>Datos Demográficos:</strong> Información básica sobre los participantes.</li>
+                    <li><strong>Cuerpo Principal:</strong> Preguntas organizadas por categorías o temas.</li>
+                    <li><strong>Agradecimiento:</strong> Mensaje final agradeciendo la participación.</li>
+                </ul>
+            </div>
+
+            <div class="estructura-info">
+                <h4><i class="fas fa-list-ul"></i> Tipos de Preguntas</h4>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                    <div style="flex-basis: 45%; margin-bottom:1rem;">
+                        <h5>Preguntas Cerradas</h5>
+                        <ul class="lista-simple">
+                            <li>Opción múltiple</li>
+                            <li>Escala Likert</li>
+                            <li>Sí/No</li>
+                            <li>Clasificación</li>
+                        </ul>
+                        <p><em>Ventaja:</em> Fáciles de analizar cuantitativamente.</p>
+                    </div>
+                    <div style="flex-basis: 45%; margin-bottom:1rem;">
+                        <h5>Preguntas Abiertas</h5>
+                        <ul class="lista-simple">
+                            <li>Respuesta libre</li>
+                            <li>Opiniones detalladas</li>
+                            <li>Sugerencias</li>
+                            <li>Experiencias</li>
+                        </ul>
+                        <p><em>Ventaja:</em> Proporcionan información cualitativa rica en detalles.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="herramientas-recomendadas">
+                <h4><i class="fas fa-chart-bar"></i> Herramientas para Análisis de Datos</h4>
+                <ul>
+                    <li><strong>Julius.ai:</strong> Plataforma de análisis de datos impulsada por IA que puede procesar y visualizar resultados de encuestas. <a href="https://julius.ai/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a Julius.ai</a></li>
+                    <li><strong>ChatCSV:</strong> Herramienta que permite analizar archivos CSV mediante conversaciones en lenguaje natural. <a href="https://www.chatcsv.co/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a ChatCSV</a></li>
+                </ul>
+            </div>
+
+            <h3>Métodos de Recolección de Datos:</h3>
+            <ul>
+                <li>Datos Cuantitativos (encuestas cerradas, experimentos, observación estructurada)</li>
+                <li>Datos Cualitativos (entrevistas, grupos focales, observación participante)</li>
+            </ul>
+            <h3>Consideraciones Éticas:</h3>
+            <ul>
+                <li>Consentimiento Informado</li>
+                <li>Confidencialidad y Anonimato</li>
+                <li>Minimización de Riesgos</li>
+            </ul>
+            <h3>IA en la Recolección y Análisis Primario de Datos:</h3>
+            <p>Encuestas Inteligentes, Análisis de Video y Audio, Recolección de Datos de Sensores e IoT, Web Scraping y PLN.</p>
+            <h3>Datos Primarios vs. Secundarios:</h3>
+            <p>Datos Primarios son recolectados directamente por el investigador para su estudio; los secundarios ya existen y fueron recolectados por otros.</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-clipboard-list"></i> Prompt para Diseño de Instrumento de Recolección</h4>
+                <pre class="prompt-text" id="prompt-recoleccion-datos-texto">Actúa como experto en metodología de investigación y diseño de instrumentos para recolección de datos. Necesito crear un instrumento para validar aspectos de mi proyecto de aplicación [Nombre de la Aplicación], que es una [tipo: web/móvil/escritorio] diseñada para [descripción breve de la solución].
+
+Mi objetivo es recopilar información sobre: [especificar los aspectos que deseas validar, por ejemplo: necesidades de los usuarios, usabilidad, disposición a pagar, etc.]
+
+Por favor, diseña un instrumento completo de recolección de datos con la siguiente estructura:
+
+1. NOMBRE DEL INSTRUMENTO:
+   - Título claro y descriptivo
+
+2. INTRODUCCIÓN:
+   - Breve explicación del propósito del estudio
+   - Mención de la Ley de Habeas Data de Colombia (Ley 1581 de 2012)
+   - Información sobre confidencialidad y uso de datos
+   - Tiempo estimado para completar el instrumento
+
+3. DATOS DEMOGRÁFICOS:
+   - 4-5 preguntas para caracterizar a los participantes (edad, género, ocupación, etc.)
+
+4. CUERPO PRINCIPAL:
+   - Sección 1: [Tema específico] - 3-4 preguntas
+   - Sección 2: [Tema específico] - 3-4 preguntas
+   - Sección 3: [Tema específico] - 3-4 preguntas
+   - Sección 4: [Tema específico] - 3-4 preguntas
+
+5. AGRADECIMIENTO:
+   - Mensaje final agradeciendo la participación
+
+Incluye una combinación equilibrada de:
+- Preguntas cerradas (opción múltiple, escala Likert, sí/no)
+- Preguntas abiertas para obtener información cualitativa
+- Preguntas de validación para verificar la consistencia de las respuestas
+
+Además, proporciona 3 recomendaciones específicas sobre cómo analizar los resultados utilizando herramientas de IA como Julius.ai o ChatCSV, incluyendo ejemplos de preguntas que podrías hacer a estas herramientas para extraer insights valiosos de los datos recopilados.</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-recoleccion-datos-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+            <div class="cuestionario-interactivo" id="cuestionario-recoleccion-datos">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Recolección de Datos</h3>
+                 <button class="btn btn-quiz-iniciar" id="start-btn-recoleccion-datos"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-recoleccion-datos" style="display:none;">
+                    <div id="quiz-container-recoleccion-datos"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-recoleccion-datos"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-recoleccion-datos" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-recoleccion-datos">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-recoleccion-datos" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-recoleccion-datos" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-recoleccion-datos" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+        <div id="poster-cientifico" class="section" style="display:none;">
+            <h2>8. Póster Científico</h2>
+            <p>Un póster científico es un formato gráfico utilizado para presentar de manera concisa y visualmente atractiva los resultados de una investigación, un proyecto o un estudio. Es una herramienta común en congresos, simposios y ferias científicas.</p>
+            
+            <div class="estructura-info">
+                <h4><i class="fas fa-object-group"></i> Estructura del Póster Científico</h4>
+                <ul class="lista-simple">
+                    <li><strong>TÍTULO DEL PROYECTO</strong> - Autores e Institución</li>
+                    <li><strong>INTRODUCCIÓN</strong> - Contexto, problema y justificación</li>
+                    <li><strong>OBJETIVOS</strong> - General y específicos</li>
+                    <li><strong>METODOLOGÍA</strong> - Enfoque, herramientas y procesos</li>
+                    <li><strong>RESULTADOS</strong> - Hallazgos principales con visualizaciones</li>
+                    <li><strong>CONCLUSIONES</strong> - Interpretación de resultados e implicaciones</li>
+                    <li><strong>REFERENCIAS</strong> - Fuentes principales y contacto</li>
+                </ul>
+            </div>
+
+            <div class="estructura-info">
+                <h4><i class="fas fa-lightbulb"></i> Consejos para un Póster Efectivo</h4>
+                <ul class="lista-simple">
+                    <li><strong>Simplicidad:</strong> Mantén el contenido conciso y directo.</li>
+                    <li><strong>Visual:</strong> Utiliza gráficos, diagramas e imágenes para comunicar ideas complejas.</li>
+                    <li><strong>Jerarquía:</strong> Organiza la información de manera lógica y con jerarquía visual clara.</li>
+                    <li><strong>Legibilidad:</strong> Usa fuentes y tamaños que sean legibles a distancia.</li>
+                    <li><strong>Color:</strong> Emplea una paleta de colores coherente y profesional.</li>
+                    <li><strong>Balance:</strong> Equilibra texto e imágenes (70% visual, 30% texto).</li>
+                </ul>
+            </div>
+            
+            <div class="herramientas-recomendadas">
+                <h4><i class="fas fa-tools"></i> Herramientas Recomendadas</h4>
+                <ul>
+                    <li><strong>Canva:</strong> Plataforma de diseño con plantillas específicas para pósters científicos. <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a Canva</a></li>
+                    <li><strong>PowerPoint:</strong> Herramienta versátil para crear pósters con precisión y control total.</li>
+                    <li><strong>Figma:</strong> Plataforma de diseño colaborativo ideal para crear pósters profesionales. <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer" class="btn btn-herramienta"><i class="fas fa-external-link-alt"></i> Acceder a Figma</a></li>
+                </ul>
+            </div>
+
+            <h3>Propósito Principal de un Póster Científico:</h3>
+            <ul>
+                <li>Comunicar Resultados</li>
+                <li>Generar Discusión</li>
+                <li>Visibilidad</li>
+                <li>Networking</li>
+            </ul>
+            <h3>IA en el Diseño o Presentación de un Póster Científico:</h3>
+            <p>Sugerencias de Diseño, Generación de Gráficos, Optimización del Contenido y Revisión de Estilo.</p>
+
+            <h4>Prompt para ChatGPT/Gemini/Deepseek</h4>
+            <div class="prompt-container">
+                <h4><i class="fas fa-palette"></i> Prompt para Póster Científico</h4>
+                <pre class="prompt-text" id="prompt-poster-cientifico-texto">Actúa como diseñador científico y experto en comunicación académica. Necesito crear un póster científico que presente los resultados de mi proyecto de aplicación [Nombre de la Aplicación], que es una [tipo: web/móvil/escritorio] diseñada para [descripción breve de la solución].
+
+Por favor, genera el contenido completo para cada sección del póster científico, siguiendo esta estructura:
+
+1. TÍTULO:
+   - Título principal atractivo y descriptivo (máximo 15 palabras)
+   - Subtítulo que complemente la información (opcional)
+   - Autores e institución
+
+2. INTRODUCCIÓN (máximo 150 palabras):
+   - Contexto del problema
+   - Justificación del proyecto
+   - Breve estado del arte
+   - Pregunta de investigación o necesidad identificada
+
+3. OBJETIVOS (formato de lista, máximo 100 palabras):
+   - Objetivo general
+   - 3-4 objetivos específicos
+
+4. METODOLOGÍA (máximo 200 palabras):
+   - Enfoque metodológico
+   - Herramientas y tecnologías utilizadas
+   - Fases del desarrollo
+   - Métodos de validación
+
+5. RESULTADOS (máximo 250 palabras):
+   - 3-4 hallazgos principales
+   - Descripción de la solución desarrollada
+   - Sugerencias para visualizaciones (gráficos, diagramas, capturas de pantalla)
+   - Datos cuantitativos relevantes
+
+6. CONCLUSIONES (máximo 150 palabras):
+   - Interpretación de los resultados
+   - Implicaciones prácticas
+   - Limitaciones
+   - Trabajo futuro
+
+7. REFERENCIAS:
+   - 5 referencias clave en formato APA
+   - Información de contacto
+
+Además, proporciona 5 recomendaciones específicas sobre el diseño visual del póster (colores, disposición, tipografía, etc.) y 3 consejos para presentarlo efectivamente en un evento académico o profesional.</pre>
+                <button class="btn btn-prompt" onclick="copiarPrompt('prompt-poster-cientifico-texto')"><i class="fas fa-copy"></i> Copiar Prompt</button>
+            </div>
+            <div class="ejemplo-resultado">
+                <h5><i class="fas fa-image"></i> Ejemplo de Enlace a Pósters</h5>
+                <p>Puedes encontrar ejemplos de pósters científicos en diversos repositorios académicos y universitarios. Busca en Google "ejemplos póster científico [tu área de estudio]" para inspiración.</p>
+                <a href="https://www.google.com/search?q=ejemplos+poster+cientifico" class="btn btn-explorar" target="_blank" rel="noopener noreferrer"><i class="fas fa-search"></i> Ver Ejemplos de Pósters</a>
+            </div>
+
+            <div class="cuestionario-interactivo" id="cuestionario-poster-cientifico">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Póster Científico</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-poster-cientifico"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-poster-cientifico" style="display:none;">
+                    <div id="quiz-container-poster-cientifico"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-poster-cientifico"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-poster-cientifico" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-poster-cientifico">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-poster-cientifico" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-poster-cientifico" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-poster-cientifico" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+        
+        <div id="derecho-autor" class="section" style="display:none;">
+            <h2>9. DERECHO DE AUTOR</h2>
+            <p>A continuación, se presenta información relevante sobre Derecho de Autor y Propiedad Intelectual, así como el proceso de registro en línea para Software. Es crucial entender estos aspectos al desarrollar y gestionar proyectos, especialmente en el ámbito de las tecnologías de la información.</p>
+            <h3>Derecho de Autor y Propiedad Intelectual en Proyectos de Tecnologías de Información TI</h3>
+            <p>La propiedad intelectual (PI) se refiere a las creaciones de la mente, como invenciones, obras literarias y artísticas, diseños, símbolos, nombres e imágenes utilizados en el comercio. El derecho de autor es una rama de la PI que protege las obras originales de autoría, como el software, las bases de datos, los textos, la música, las imágenes, etc., desde el momento de su creación.</p>
+            <p>En los proyectos de TI, el software desarrollado, las interfaces gráficas, la documentación, las bases de datos y otros contenidos originales suelen estar protegidos por derecho de autor. Comprender quién es el titular de estos derechos (el desarrollador, la empresa, el cliente) y cómo se pueden licenciar o transferir es fundamental.</p>
+            <p>Para una explicación detallada sobre estos conceptos en el contexto de proyectos tecnológicos, consulte el siguiente recurso:</p>
+            <p>
+                <a href="https://youtu.be/YF9e13VCN2U" target="_blank" rel="noopener noreferrer" class="btn btn-explorar"><i class="fab fa-youtube"></i> Ver Video: PI en Proyectos TI</a>
+            </p>
+            <div style="border:1px dashed #ccc; padding:10px; margin-top:10px; background-color:#f9f9f9;">
+                <p><strong><i class="fas fa-tasks"></i> Tarea para el estudiante:</strong></p>
+                <p><em>Después de ver el video, resume aquí los puntos clave sobre:</em></p>
+                <ul>
+                    <li><em>Concepto de Derecho de Autor aplicado a software y proyectos TI.</em></li>
+                    <li><em>Concepto de Propiedad Intelectual y su relación con el Derecho de Autor.</em></li>
+                    <li><em>Tipos de obras protegidas en proyectos TI.</em></li>
+                    <li><em>Importancia de la titularidad de los derechos.</em></li>
+                    <li><em>Tipos de licencias de software comunes (propietarias, libres/open source) y sus implicaciones.</em></li>
+                </ul>
+            </div>
+
+            <h3>Registro en Línea para Software</h3>
+            <p>Si bien el derecho de autor nace con la creación de la obra (por ejemplo, al escribir el código fuente), registrar el software ante la oficina nacional de derecho de autor proporciona una prueba fehaciente de la autoría y la fecha de creación, lo cual es muy útil en caso de disputas o plagio. El proceso de registro puede variar según el país, pero muchos ofrecen procedimientos en línea.</p>
+            <p>El siguiente recurso explica el proceso de registro en línea para software:</p>
+            <p>
+                <a href="https://www.youtube.com/watch?v=uxm3ibghmJk" target="_blank" rel="noopener noreferrer" class="btn btn-explorar"><i class="fab fa-youtube"></i> Ver Video: Registro de Software</a>
+            </p>
+            <div style="border:1px dashed #ccc; padding:10px; margin-top:10px; background-color:#f9f9f9;">
+                <p><strong><i class="fas fa-tasks"></i> Tarea para el estudiante:</strong></p>
+                <p><em>Después de ver el video, resume aquí los puntos clave sobre:</em></p>
+                <ul>
+                    <li><em>Beneficios de registrar el software.</em></li>
+                    <li><em>Requisitos comunes para el registro en línea (ej. fragmentos de código, manuales, datos del autor).</em></li>
+                    <li><em>Pasos generales del proceso de registro en línea.</em></li>
+                    <li><em>Entidad encargada del registro en tu país (si se menciona o puedes investigarlo).</em></li>
+                </ul>
+            </div>
+            <p><strong>Nota:</strong> Es responsabilidad del usuario visualizar los videos proporcionados y extraer la información pertinente para completar los resúmenes solicitados en esta sección. Los enlaces son provistos como referencia y su contenido es externo a este OVA.</p>
+            
+            <div class="cuestionario-interactivo" id="cuestionario-derecho-autor">
+                <h3><i class="fas fa-question-circle"></i> Cuestionario: Derecho de Autor</h3>
+                <button class="btn btn-quiz-iniciar" id="start-btn-derecho-autor"><i class="fas fa-play"></i> Iniciar Cuestionario</button>
+                <div class="quiz-content-wrapper" id="quiz-wrapper-derecho-autor" style="display:none;">
+                    <div id="quiz-container-derecho-autor"></div>
+                    <div class="progreso-barra-container">
+                        <div class="progreso-barra" id="progress-bar-derecho-autor"></div>
+                    </div>
+                    <div class="navegacion-cuestionario">
+                        <button class="btn btn-quiz" id="prev-btn-derecho-autor" disabled><i class="fas fa-arrow-left"></i> Anterior</button>
+                        <button class="btn btn-quiz" id="next-btn-derecho-autor">Siguiente <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn btn-quiz-finalizar" id="finish-btn-derecho-autor" style="display:none;"><i class="fas fa-check"></i> Finalizar y Enviar</button>
+                    </div>
+                </div>
+                <div id="results-container-derecho-autor" class="resultados-cuestionario" style="display:none;"></div>
+                <button class="btn btn-quiz-reiniciar" id="restart-btn-derecho-autor" style="display:none;"><i class="fas fa-redo"></i> Reiniciar Cuestionario</button>
+            </div>
+            <button class="btn-regresar"><i class="fas fa-home"></i> Regresar al Inicio</button>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>© 2025 OVA - Formulación de Proyectos Asistidos por IA. Todos los derechos reservados. Rubén Darío Cárdenas Espinosa PhD(c) Universidad de Caldas.</p>
+    </footer>
+
+<script>
+// --- Funciones para copiar prompts ---
+function copiarPrompt(elementId) {
+    const promptText = document.getElementById(elementId).innerText;
+    navigator.clipboard.writeText(promptText).then(() => {
+        alert('Prompt copiado al portapapeles');
+    }).catch(err => {
+        console.error('Error al copiar el prompt: ', err);
+        alert('Error al copiar. Intenta manualmente.');
+    });
+}
+
+function generarPromptPersonalizadoIdea() {
+    const hobbies = document.getElementById('idea-hobbies').value || "[Describe tus hobbies e intereses]";
+    const conocimientos = document.getElementById('idea-conocimientos').value || "[Describe tu formación académica y conocimientos técnicos]";
+    const experiencia = document.getElementById('idea-experiencia').value || "[Describe tu experiencia relevante]";
+
+    const promptBase = `Actúa como experto en desarrollo de aplicaciones y generación de ideas de proyectos. Basado en mis intereses, conocimientos y experiencia, ayúdame a identificar una idea de proyecto innovadora para desarrollar una aplicación.
+
+Mis hobbies e intereses: ${hobbies}
+Mis conocimientos y formación: ${conocimientos}
+Mi experiencia previa: ${experiencia}
+
+Por favor, genera 3 ideas de proyectos de aplicaciones (web, móvil o escritorio) que:
+1. Se alineen con mis intereses y conocimientos
+2. Resuelvan una necesidad real del mercado
+3. Sean viables técnicamente considerando mi experiencia
+4. Tengan potencial de innovación
+
+Para cada idea, incluye:
+- Nombre tentativo de la aplicación
+- Problema que resuelve
+- Descripción breve de la solución
+- Tipo de aplicación (web, móvil o escritorio)
+- Tecnologías recomendadas
+- Nivel de complejidad estimado`;
+    navigator.clipboard.writeText(promptBase).then(() => {
+        alert('Prompt personalizado copiado al portapapeles');
+    }).catch(err => {
+        console.error('Error al copiar el prompt personalizado: ', err);
+        alert('Error al copiar. Intenta manualmente.');
+    });
+}
+
+function generarPromptPersonalizadoMarcoLogico() {
+    const necesidad = document.getElementById('marco-necesidad').value || "[Describe la necesidad o problema]";
+    const contexto = document.getElementById('marco-contexto').value || "[Lugar y contexto]";
+    const tipoApp = document.getElementById('marco-tipo-app').value;
+
+    const promptBase = `Actúa como experto en Metodología de Marco Lógico para proyectos de desarrollo de software. Necesito estructurar un proyecto para una Aplicación ${tipoApp} que resuelva la siguiente necesidad: "${necesidad}" en el contexto de ${contexto}.
+
+Por favor, genera los siguientes componentes del Marco Lógico:
+
+1. Cuadro de Análisis de Involucrados con 4 grupos de interés (incluye columnas: Grupo, Intereses, Recursos/Mandatos, Estrategias)
+2. Árbol de Problemas que incluya:
+   - Problema central (formulado como pregunta de investigación)
+   - 4 problemas causa
+   - 4 problemas efecto
+3. Árbol de Objetivos que incluya:
+   - Objetivo General con esta estructura: "Desarrollar una Aplicación ${tipoApp} para [solución al problema] en ${contexto}"
+   - 4 Objetivos Específicos (medios) con esta estructura:
+     1. Analizar requerimientos técnicos y operativos para la Aplicación ${tipoApp}
+     2. Diseñar un Prototipo funcional de la Aplicación ${tipoApp} para [solución al problema] en ${contexto}
+     3. Implementar la Aplicación diseñada
+     4. Evaluar la Aplicación Implementada
+   - 4 Objetivos Fines (impactos esperados)
+4. Matriz de Marco Lógico completa con:
+   - Fin, Propósito, Componentes y Actividades
+   - Indicadores verificables
+   - Medios de verificación
+   - Supuestos`;
+    navigator.clipboard.writeText(promptBase).then(() => {
+        alert('Prompt personalizado para Marco Lógico copiado.');
+    }).catch(err => {
+        alert('Error al copiar.');
+    });
+}
+
+
+// --- Lógica de Cuestionarios Interactivos ---
+const cuestionariosData = {
+    idea: [
+        {
+            pregunta: "¿Cuál es el primer paso crucial en la formulación de un proyecto?",
+            opciones: ["Planificación detallada", "Búsqueda de financiación", "Ideación", "Desarrollo del prototipo"],
+            respuestaCorrecta: "Ideación",
+            retroalimentacion: "Correcto. La ideación es el punto de partida para cualquier proyecto, donde se generan y refinan los conceptos iniciales."
+        },
+        {
+            pregunta: "Una característica de una buena idea de proyecto es:",
+            opciones: ["Complejidad técnica extrema", "Ser muy costosa", "Claridad y facilidad de explicación", "Ser igual a otras existentes"],
+            respuestaCorrecta: "Claridad y facilidad de explicación",
+            retroalimentacion: "Correcto. Una idea clara es fundamental para su desarrollo, comunicación y para que otros entiendan su valor."
+        },
+        {
+            pregunta: "¿Cómo puede ayudar la IA en la generación de ideas?",
+            opciones: ["Escribiendo todo el código automáticamente", "Sugiriendo conceptos y analizando tendencias", "Consiguiendo inversores directamente", "Solo validando ideas existentes"],
+            respuestaCorrecta: "Sugiriendo conceptos y analizando tendencias",
+            retroalimentacion: "Correcto. La IA puede analizar grandes volúmenes de datos para identificar tendencias emergentes y ayudar en el brainstorming de nuevas ideas."
+        }
+    ],
+    'marco-logico': [
+        {
+            pregunta: "¿Qué significa la sigla MML en el contexto de proyectos?",
+            opciones: ["Método Moderno de Liderazgo", "Metodología de Marco Lógico", "Modelo Múltiple de Lenguaje", "Manejo Maestro de Listas"],
+            respuestaCorrecta: "Metodología de Marco Lógico",
+            retroalimentacion: "Correcto. MML es la sigla de Metodología de Marco Lógico, una herramienta para la planificación y gestión de proyectos."
+        },
+        {
+            pregunta: "En la Matriz de Marco Lógico, los 'Supuestos' se refieren a:",
+            opciones: ["Los costos estimados del proyecto", "Las tareas asignadas a cada miembro del equipo", "Factores externos fuera del control del proyecto, pero cruciales para su éxito", "Los objetivos principales del proyecto"],
+            respuestaCorrecta: "Factores externos fuera del control del proyecto, pero cruciales para su éxito",
+            retroalimentacion: "Correcto. Los supuestos son condiciones externas que deben cumplirse para que el proyecto alcance sus objetivos."
+        }
+    ],
+    'plan-negocio': [
+        {
+            pregunta: "¿Qué sección de un plan de negocio ofrece una visión general y concisa de todo el documento?",
+            opciones: ["Análisis de Mercado", "Plan Financiero", "Resumen Ejecutivo", "Descripción de la Empresa"],
+            respuestaCorrecta: "Resumen Ejecutivo",
+            retroalimentacion: "Correcto. El Resumen Ejecutivo es una síntesis de los puntos más importantes del plan de negocio."
+        },
+        {
+            pregunta: "El Business Model Canvas es una herramienta que se centra principalmente en ¿cuántos bloques clave para describir un modelo de negocio?",
+            opciones: ["5 bloques", "7 bloques", "9 bloques", "12 bloques"],
+            respuestaCorrecta: "9 bloques",
+            retroalimentacion: "Correcto. El Business Model Canvas utiliza 9 bloques fundamentales para visualizar y analizar un modelo de negocio."
+        }
+    ],
+    'mapa-empatia': [
+        {
+            pregunta: "¿Cuál es el objetivo principal de utilizar un Mapa de Empatía en un proyecto?",
+            opciones: ["Definir la arquitectura técnica de la solución", "Estimar los costos de desarrollo del producto", "Obtener una comprensión profunda del cliente o usuario", "Analizar las estrategias de marketing de la competencia"],
+            respuestaCorrecta: "Obtener una comprensión profunda del cliente o usuario",
+            retroalimentacion: "Correcto. El Mapa de Empatía se centra en entender las necesidades, pensamientos, sentimientos y comportamientos del usuario."
+        },
+        {
+            pregunta: "En un Mapa de Empatía, la sección 'Pains' (Dolores o Esfuerzos) se refiere a:",
+            opciones: ["Los beneficios y resultados que el usuario espera obtener", "Las frustraciones, miedos y obstáculos que enfrenta el usuario", "Lo que el usuario dice públicamente sobre un producto o servicio", "Las herramientas y tecnologías que el usuario utiliza habitualmente"],
+            respuestaCorrecta: "Las frustraciones, miedos y obstáculos que enfrenta el usuario",
+            retroalimentacion: "Correcto. La sección 'Pains' ayuda a identificar las dificultades y puntos de fricción del usuario."
+        }
+    ],
+    'escenario-uso': [
+        {
+            pregunta: "¿Qué describe fundamentalmente un escenario de uso?",
+            opciones: ["Las especificaciones técnicas detalladas del servidor donde se alojará la aplicación", "La interacción específica de un usuario (actor) con un sistema para lograr un objetivo concreto", "El presupuesto detallado y el cronograma de todas las fases del proyecto", "El organigrama completo del equipo de desarrollo y sus roles asignados"],
+            respuestaCorrecta: "La interacción específica de un usuario (actor) con un sistema para lograr un objetivo concreto",
+            retroalimentacion: "Correcto. Un escenario de uso narra una secuencia de acciones entre un actor y el sistema para alcanzar una meta."
+        },
+        {
+            pregunta: "En el contexto de los escenarios de uso, un 'Actor' es:",
+            opciones: ["Un inversor principal que financia el proyecto de desarrollo", "Un miembro senior del equipo de desarrollo encargado de la arquitectura", "El usuario, rol o sistema externo que interactúa con el sistema que se está diseñando", "Un representante de una empresa competidora en el mismo nicho de mercado"],
+            respuestaCorrecta: "El usuario, rol o sistema externo que interactúa con el sistema que se está diseñando",
+            retroalimentacion: "Correcto. El 'Actor' es la entidad (persona o sistema) que inicia o participa en las interacciones descritas en el escenario."
+        }
+    ],
+     'revision-literatura': [
+        {
+            pregunta: "¿Cuál es uno de los objetivos principales al realizar una revisión de literatura?",
+            opciones: ["Desarrollar el código fuente final de la aplicación", "Establecer el estado del arte y conocimiento existente sobre un tema específico", "Diseñar la interfaz gráfica y la experiencia de usuario del producto", "Definir el presupuesto detallado y las fuentes de financiación del proyecto"],
+            respuestaCorrecta: "Establecer el estado del arte y conocimiento existente sobre un tema específico",
+            retroalimentacion: "Correcto. La revisión de literatura permite conocer lo que ya se sabe, identificar vacíos y fundamentar la investigación."
+        },
+        {
+            pregunta: "Una fuente de información primaria y altamente confiable para una revisión de literatura académica es:",
+            opciones: ["Publicaciones en blogs personales sin revisión editorial ni referencias académicas", "Artículos científicos publicados en journals revisados por pares (peer-reviewed)", "Comentarios y opiniones expresadas en foros de discusión en redes sociales", "Anuncios publicitarios y material de marketing de empresas del sector"],
+            respuestaCorrecta: "Artículos científicos publicados en journals revisados por pares (peer-reviewed)",
+            retroalimentacion: "Correcto. Los journals revisados por pares publican investigaciones originales que han sido validadas por expertos en el campo."
+        }
+    ],
+    'recoleccion-datos': [
+        {
+            pregunta: "¿Qué se entiende por 'datos primarios' en el contexto de una investigación?",
+            opciones: ["Datos que han sido recolectados y procesados previamente por otros investigadores o instituciones", "Información general disponible públicamente en sitios web de noticias o enciclopedias en línea", "Datos originales recolectados directamente por el investigador para los propósitos específicos de su estudio actual", "Datos históricos y registros internos de una empresa u organización específica"],
+            respuestaCorrecta: "Datos originales recolectados directamente por el investigador para los propósitos específicos de su estudio actual",
+            retroalimentacion: "Correcto. Los datos primarios son aquellos que el investigador obtiene de primera mano para su investigación."
+        },
+        {
+            pregunta: "El principio ético de 'consentimiento informado' en la recolección de datos implica que los participantes:",
+            opciones: ["Deben recibir una compensación económica significativa por su tiempo, independientemente de otros factores", "No necesitan ser informados sobre el propósito exacto del estudio para evitar sesgos en sus respuestas", "Deben comprender el propósito del estudio, cómo se utilizarán sus datos, los posibles riesgos y beneficios, y participar de forma voluntaria y libre", "Únicamente deben firmar un documento legal extenso sin necesidad de explicaciones verbales detalladas"],
+            respuestaCorrecta: "Deben comprender el propósito del estudio, cómo se utilizarán sus datos, los posibles riesgos y beneficios, y participar de forma voluntaria y libre",
+            retroalimentacion: "Correcto. El consentimiento informado es crucial para garantizar la participación ética y voluntaria de los sujetos de investigación."
+        }
+    ],
+    'poster-cientifico': [
+        {
+            pregunta: "Una característica esencial de un póster científico efectivo para comunicar una investigación es:",
+            opciones: ["Incluir la mayor cantidad de texto posible, detallando cada aspecto del estudio minuciosamente", "Utilizar exclusivamente colores oscuros y una tipografía muy pequeña para dar una apariencia seria y formal", "Ser visualmente atractivo, claro, conciso y con un flujo lógico de información fácil de seguir", "Presentar únicamente la introducción y los objetivos del proyecto, dejando los resultados para la presentación oral"],
+            respuestaCorrecta: "Ser visualmente atractivo, claro, conciso y con un flujo lógico de información fácil de seguir",
+            retroalimentacion: "Correcto. Un buen póster científico combina diseño visual atractivo con contenido claro y bien organizado para comunicar eficazmente."
+        },
+        {
+            pregunta: "¿Cuál de las siguientes es una sección típica e indispensable en la estructura de un póster científico?",
+            opciones: ["El código fuente completo de cualquier software desarrollado durante la investigación", "Un listado detallado de todos los empleados y colaboradores de la institución afiliada", "Resultados, donde se presentan los hallazgos clave del estudio o proyecto", "Un análisis financiero exhaustivo de las estrategias de la competencia directa en el mercado"],
+            respuestaCorrecta: "Resultados, donde se presentan los hallazgos clave del estudio o proyecto",
+            retroalimentacion: "Correcto. La sección de Resultados es fundamental, ya que muestra las contribuciones y descubrimientos del trabajo."
+        }
+    ],
+    'derecho-autor': [
+        {
+            pregunta: "¿Qué protege principalmente el Derecho de Autor?",
+            opciones: ["Las ideas abstractas y conceptos generales", "Las invenciones y procesos industriales patentables", "Las obras originales de autoría, como software, textos y música, una vez fijadas en un medio tangible", "Las marcas comerciales y logotipos de empresas"],
+            respuestaCorrecta: "Las obras originales de autoría, como software, textos y música, una vez fijadas en un medio tangible",
+            retroalimentacion: "Correcto. El Derecho de Autor protege la expresión original de las ideas, no las ideas en sí mismas."
+        },
+        {
+            pregunta: "¿Es obligatorio registrar una obra para que esté protegida por Derecho de Autor en la mayoría de las legislaciones?",
+            opciones: ["Sí, el registro es un requisito indispensable para que nazca la protección.", "No, la protección del Derecho de Autor generalmente nace con la creación de la obra, aunque el registro ofrece ventajas probatorias.", "Sí, y además se debe publicar la obra en un medio oficial.", "No, solo las obras de gran valor económico necesitan ser registradas."],
+            respuestaCorrecta: "No, la protección del Derecho de Autor generalmente nace con la creación de la obra, aunque el registro ofrece ventajas probatorias.",
+            retroalimentacion: "Correcto. En la mayoría de los países (Convenio de Berna), la protección es automática desde la creación, pero el registro facilita la prueba de autoría."
+        }
+    ]
+};
+
+function setupCuestionario(quizId) {
+    const startButton = document.getElementById(`start-btn-${quizId}`);
+    const quizWrapper = document.getElementById(`quiz-wrapper-${quizId}`); 
+    const quizContainer = document.getElementById(`quiz-container-${quizId}`);
+    const progressBar = document.getElementById(`progress-bar-${quizId}`);
+    const prevButton = document.getElementById(`prev-btn-${quizId}`);
+    const nextButton = document.getElementById(`next-btn-${quizId}`);
+    const finishButton = document.getElementById(`finish-btn-${quizId}`);
+    const resultsContainer = document.getElementById(`results-container-${quizId}`);
+    const restartButton = document.getElementById(`restart-btn-${quizId}`);
+    
+    const preguntas = cuestionariosData[quizId];
+    if (!preguntas || preguntas.length === 0) {
+        console.error(`No se encontraron datos o preguntas para el cuestionario: ${quizId}`);
+        const cuestionarioDiv = document.getElementById(`cuestionario-${quizId}`);
+        if(cuestionarioDiv) cuestionarioDiv.innerHTML = "<p>Este cuestionario no está disponible actualmente.</p>";
+        if(startButton) startButton.style.display = 'none'; // Ocultar botón de inicio si no hay preguntas
+        return;
+    }
+
+    let preguntaActual = 0;
+    let respuestasUsuario = new Array(preguntas.length).fill(null);
+    let puntaje = 0;
+
+    function iniciarCuestionario() {
+        startButton.style.display = 'none';
+        quizWrapper.style.display = 'block';
+        resultsContainer.style.display = 'none';
+        restartButton.style.display = 'none';
+        preguntaActual = 0;
+        respuestasUsuario.fill(null);
+        puntaje = 0;
+        mostrarPregunta();
+    }
+
+    function mostrarPregunta() {
+        const dataPregunta = preguntas[preguntaActual];
+        quizContainer.innerHTML = `
+            <div class="pregunta-container">
+                <p class="pregunta-texto">${preguntaActual + 1}. ${dataPregunta.pregunta}</p>
+                <ul class="opciones-lista">
+                    ${dataPregunta.opciones.map((opcion, index) => `
+                        <li>
+                            <label>
+                                <input type="radio" name="opcion-${quizId}" value="${opcion}" ${respuestasUsuario[preguntaActual] === opcion ? 'checked' : ''}>
+                                <span>${opcion}</span>
+                            </label>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `;
+        actualizarProgreso();
+        actualizarBotonesNav();
+
+        const radios = quizContainer.querySelectorAll(`input[name="opcion-${quizId}"]`);
+        radios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                respuestasUsuario[preguntaActual] = event.target.value;
+            });
+        });
+    }
+
+    function actualizarProgreso() {
+        const progreso = ((preguntaActual + 1) / preguntas.length) * 100;
+        progressBar.style.width = `${progreso}%`;
+    }
+
+    function actualizarBotonesNav() {
+        prevButton.disabled = preguntaActual === 0;
+        if (preguntaActual === preguntas.length - 1) {
+            nextButton.style.display = 'none';
+            finishButton.style.display = 'inline-flex';
+        } else {
+            nextButton.style.display = 'inline-flex';
+            finishButton.style.display = 'none';
+        }
+    }
+
+    function mostrarResultados() {
+        puntaje = 0;
+        let retroalimentacionHTML = '<h4>Resultados Detallados:</h4>';
+        preguntas.forEach((pregunta, index) => {
+            const esCorrecta = respuestasUsuario[index] === pregunta.respuestaCorrecta;
+            if (esCorrecta) {
+                puntaje++;
+            }
+            retroalimentacionHTML += `
+                <div class="retroalimentacion-item ${esCorrecta ? 'correcta' : 'incorrecta'}">
+                    <p><strong>Pregunta ${index + 1}:</strong> ${pregunta.pregunta}</p>
+                    <p>Tu respuesta: <span style="font-weight:bold;">${respuestasUsuario[index] || 'No respondida'}</span></p>
+                    ${!esCorrecta ? `<p>Respuesta correcta: <span style="font-weight:bold;">${pregunta.respuestaCorrecta}</span></p>` : ''}
+                    <p><em>${pregunta.retroalimentacion}</em></p>
+                </div>
+            `;
+        });
+
+        const porcentaje = (preguntas.length > 0) ? (puntaje / preguntas.length) * 100 : 0;
+        resultsContainer.innerHTML = `
+            <p><strong>Tu puntaje: ${puntaje} de ${preguntas.length} (${porcentaje.toFixed(0)}%)</strong></p>
+            ${retroalimentacionHTML}
+        `;
+        quizWrapper.style.display = 'none';
+        resultsContainer.style.display = 'block';
+        restartButton.style.display = 'inline-flex';
+    }
+    
+    if(startButton) startButton.addEventListener('click', iniciarCuestionario);
+
+    if(prevButton) prevButton.addEventListener('click', () => {
+        if (preguntaActual > 0) {
+            preguntaActual--;
+            mostrarPregunta();
+        }
+    });
+
+    if(nextButton) nextButton.addEventListener('click', () => {
+        if (preguntaActual < preguntas.length - 1) {
+            preguntaActual++;
+            mostrarPregunta();
+        }
+    });
+
+    if(finishButton) finishButton.addEventListener('click', mostrarResultados);
+    if(restartButton) restartButton.addEventListener('click', iniciarCuestionario); 
+}
+
+
+// --- Lógica de Navegación Principal del OVA ---
+document.addEventListener('DOMContentLoaded', function() {
+    const mainContentCards = document.getElementById('main-content-cards');
+    const seccionesDetalladas = document.querySelectorAll('.section');
+    const tarjetas = document.querySelectorAll('.grid .card');
+    const botonesRegresar = document.querySelectorAll('.btn-regresar');
+    const navMenu = document.getElementById('nav-menu');
+    const menuToggle = document.querySelector('.menu-toggle');
+    const menuToggleIcon = menuToggle ? menuToggle.querySelector('i') : null;
+
+    const seccionesIds = [
+        'idea', 'marco-logico', 'plan-negocio', 'mapa-empatia', 
+        'escenario-uso', 'revision-literatura', 'recoleccion-datos', 
+        'poster-cientifico', 'derecho-autor'
+    ];
+    
+    function mostrarSeccion(idSeccion) {
+        mainContentCards.style.display = 'none';
+        seccionesDetalladas.forEach(section => section.style.display = 'none');
+        
+        const seccionActiva = document.getElementById(idSeccion);
+        if (seccionActiva) {
+            seccionActiva.style.display = 'block';
+            window.scrollTo(0, 0);
+            
+            if (cuestionariosData[idSeccion]) {
+                const startButton = document.getElementById(`start-btn-${idSeccion}`);
+                const quizWrapper = document.getElementById(`quiz-wrapper-${idSeccion}`);
+                const resultsContainer = document.getElementById(`results-container-${idSeccion}`);
+                const restartButton = document.getElementById(`restart-btn-${idSeccion}`);
+
+                if(startButton) startButton.style.display = 'inline-flex';
+                if(quizWrapper) quizWrapper.style.display = 'none';
+                if(resultsContainer) resultsContainer.style.display = 'none';
+                if(restartButton) restartButton.style.display = 'none';
+                
+                if (quizWrapper && !quizWrapper.dataset.initializedOnce) {
+                     setupCuestionario(idSeccion);
+                     quizWrapper.dataset.initializedOnce = 'true';
+                }
+            }
+        }
+        
+        if (navMenu) {
+            Array.from(navMenu.querySelectorAll('a')).forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === `#${idSeccion}`);
+            });
+        }
+    }
+
+    function mostrarInicio() {
+        seccionesDetalladas.forEach(section => section.style.display = 'none');
+        mainContentCards.style.display = 'block';
+        window.scrollTo(0, 0);
+        if (navMenu) {
+            Array.from(navMenu.querySelectorAll('a')).forEach(a => a.classList.remove('active'));
+        }
+    }
+
+    tarjetas.forEach((tarjeta, index) => {
+        if (index < seccionesIds.length) {
+            let footer = tarjeta.querySelector('.card-footer');
+            if (!footer) {
+                footer = document.createElement('div');
+                footer.className = 'card-footer';
+                tarjeta.appendChild(footer);
+            }
+            
+            const boton = document.createElement('button');
+            boton.className = 'btn btn-explorar';
+            boton.innerHTML = '<i class="fas fa-search"></i> Explorar';
+            boton.onclick = function() {
+                mostrarSeccion(seccionesIds[index]); 
+            };
+            
+            while (footer.firstChild) footer.removeChild(footer.firstChild);
+            footer.appendChild(boton);
+        }
+    });
+
+    botonesRegresar.forEach(boton => boton.onclick = mostrarInicio);
+
+    if (navMenu && document.querySelector('main')) {
+        while (navMenu.firstChild) navMenu.removeChild(navMenu.firstChild);
+
+        const seccionesTitulos = Array.from(document.querySelectorAll('main > .section > h2'))
+            .map(h2 => {
+                const sectionElement = h2.closest('.section');
+                return sectionElement && sectionElement.id ? { id: sectionElement.id, titulo: h2.textContent } : null;
+            })
+            .filter(Boolean);
+
+        const liHome = document.createElement('li');
+        const aHome = document.createElement('a');
+        aHome.href = '#home';
+        aHome.innerHTML = '<i class="fas fa-home"></i> Inicio';
+        aHome.onclick = function(e) {
+            e.preventDefault();
+            mostrarInicio();
+            if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
+                navMenu.classList.remove('active');
+                if(menuToggleIcon) menuToggleIcon.className = 'fas fa-bars';
+            }
+        };
+        liHome.appendChild(aHome);
+        navMenu.appendChild(liHome);
+        
+        seccionesTitulos.forEach(sec => {
+            if (seccionesIds.includes(sec.id)) { 
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${sec.id}`;
+                let iconClass = 'fas fa-file-alt'; 
+                if (sec.id === 'idea') iconClass = 'fas fa-lightbulb';
+                else if (sec.id === 'marco-logico') iconClass = 'fas fa-sitemap';
+                else if (sec.id === 'plan-negocio') iconClass = 'fas fa-file-invoice-dollar';
+                else if (sec.id === 'mapa-empatia') iconClass = 'fas fa-user-friends';
+                else if (sec.id === 'escenario-uso') iconClass = 'fas fa-film';
+                else if (sec.id === 'revision-literatura') iconClass = 'fas fa-book-open';
+                else if (sec.id === 'recoleccion-datos') iconClass = 'fas fa-clipboard-list';
+                else if (sec.id === 'poster-cientifico') iconClass = 'fas fa-palette';
+                else if (sec.id === 'derecho-autor') iconClass = 'fas fa-gavel';
+
+                a.innerHTML = `<i class="${iconClass}"></i> ${sec.titulo.substring(sec.titulo.indexOf(' ') + 1)}`; 
+                a.onclick = function(e) {
+                    e.preventDefault();
+                    mostrarSeccion(sec.id); 
+                    if (window.innerWidth <= 768 && navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                         if(menuToggleIcon) menuToggleIcon.className = 'fas fa-bars';
+                    }
+                };
+                li.appendChild(a);
+                navMenu.appendChild(li);
+            }
+        });
+    }
+
+    if (menuToggle && navMenu && menuToggleIcon) {
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            menuToggleIcon.className = navMenu.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+        });
+    }
+    
+    seccionesIds.forEach(id => {
+        if (cuestionariosData[id]) {
+             const quizWrapper = document.getElementById(`quiz-wrapper-${id}`);
+             if(quizWrapper && !quizWrapper.dataset.initializedOnce) { 
+                setupCuestionario(id);
+                quizWrapper.dataset.initializedOnce = 'true';
+             }
+        }
+    });
+
+});
+</script>
+</body>
+</html>
